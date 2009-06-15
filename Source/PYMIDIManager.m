@@ -170,6 +170,7 @@ midiNotifyProc (const MIDINotification* message, void* refCon)
         {
             endpoint = [[PYMIDIRealSource alloc] initWithMIDIEndpointRef:midiEndpointRef];
             [realSourceArray addObject:endpoint];
+            [endpoint release];
         }
     }
     
@@ -247,6 +248,7 @@ midiNotifyProc (const MIDINotification* message, void* refCon)
         {
             endpoint = [[PYMIDIRealDestination alloc] initWithMIDIEndpointRef:midiEndpointRef];
             [realDestinationArray addObject:endpoint];
+            [endpoint release];
         }
     }
     
