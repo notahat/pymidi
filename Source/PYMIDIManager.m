@@ -56,20 +56,26 @@ static void midiNotifyProc (const MIDINotification* message, void* refCon);
 
 - (PYMIDIManager*)init
 {
-    notificationsEnabled = NO;
-    
-    MIDIClientCreate (CFSTR("PYMIDIManager"), midiNotifyProc, (void*)self, &midiClientRef);
-
-    realSourceArray = [[NSMutableArray alloc] init];
-    realDestinationArray = [[NSMutableArray alloc] init];
-    
-    [self updateRealSources];
-    [self updateRealDestinations];
-
-    [self buildNoteNamesArray];
+    if (self = [super init]) {
+        notificationsEnabled = NO;
         
-    notificationsEnabled = YES;
-            
+        OSStatus err = MIDIClientCreate (CFSTR("PYMIDIManager"), midiNotifyProc, (void*)self, &midiClientRef);
+        if (err != noErr) {
+            NSLog(@"Error creating MIDI client: %d", err);
+            [self release];
+            return nil;
+        }
+
+        realSourceArray = [[NSMutableArray alloc] init];
+        realDestinationArray = [[NSMutableArray alloc] init];
+        
+        [self updateRealSources];
+        [self updateRealDestinations];
+
+        [self buildNoteNamesArray];
+        
+        notificationsEnabled = YES;
+    }
     return self;
 }
 

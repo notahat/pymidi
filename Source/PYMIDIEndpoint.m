@@ -41,9 +41,11 @@
 
 - (id)init
 {
-    receivers       = [[NSMutableSet alloc] init];
-    senders         = [[NSMutableSet alloc] init];
-    // midiControllers = [[NSMutableSet alloc] init];
+    if (self = [super init]) {
+        receivers       = [[NSMutableSet alloc] init];
+        senders         = [[NSMutableSet alloc] init];
+        // midiControllers = [[NSMutableSet alloc] init];
+    }
     
     return self;
 }
@@ -51,10 +53,10 @@
 
 - (id)initWithName:(NSString*)newName uniqueID:(SInt32)newUniqueID
 {
-    self = [self init];
-    
-    name = [newName retain];
-    uniqueID = newUniqueID;
+    if (self = [self init]) {
+        name = [newName retain];
+        uniqueID = newUniqueID;
+    }
     
     return self;
 }
@@ -62,10 +64,10 @@
 
 - (id)initWithMIDIEndpointRef:(MIDIEndpointRef)newMIDIEndpointRef;
 {
-    self = [self init];
-    
-    midiEndpointRef = newMIDIEndpointRef;
-    [self setPropertiesFromMIDIEndpoint];
+    if (self = [self init]) {
+        midiEndpointRef = newMIDIEndpointRef;
+        [self setPropertiesFromMIDIEndpoint];
+    }
     
     return self;
 }
