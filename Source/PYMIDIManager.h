@@ -14,7 +14,7 @@
 */
 
 
-#import <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 #import <CoreMIDI/CoreMIDI.h>
 
 
