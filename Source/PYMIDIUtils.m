@@ -191,8 +191,8 @@ PYMIDIGetDestinationByName (NSString* nameToMatch)
 Boolean
 PYMIDIIsUniqueIDInUse (SInt32 uniqueID)
 {
-    int count;
-    int index;
+    ItemCount count;
+    ItemCount index;
     MIDIEndpointRef endpoint;
     SInt32 usedID;
     
@@ -221,7 +221,7 @@ PYMIDIAllocateUniqueID (void)
     static SInt32 sequence = 0;
     
     do {
-        uniqueID = time (NULL) + sequence++;
+        uniqueID = (SInt32)time(NULL) + sequence++;
     } while (PYMIDIIsUniqueIDInUse (uniqueID));
     
     return uniqueID;
@@ -231,8 +231,8 @@ PYMIDIAllocateUniqueID (void)
 Boolean
 PYMIDIIsEndpointNameTaken (NSString* name)
 {
-    return PYMIDIGetSourceByName      (name) != NULL ||
-           PYMIDIGetDestinationByName (name) != NULL;
+    return PYMIDIGetSourceByName      (name) ||
+           PYMIDIGetDestinationByName (name);
 }
 
 
