@@ -49,7 +49,7 @@ PYMIDIGetEndpointName (MIDIEndpointRef midiEndpointRef)
             bool endpointNameBeginsWithDeviceName = 
                 CFStringCompareWithOptions (
                     endpointName, deviceName,
-                    CFRangeMake(0, CFStringGetLength (deviceName)),
+                    CFRangeMake(0, CFStringGetLength (endpointName)),
                     kCFCompareCaseInsensitive
                 ) == kCFCompareEqualTo;
                 
