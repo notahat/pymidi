@@ -44,12 +44,13 @@ PYMIDIGetEndpointName (MIDIEndpointRef midiEndpointRef)
     // Stick the two names together, handling all the cases where one or the other doesn't exist
     NSString* name;
     
-    if (endpointName != nil) {
-        if (deviceName != nil) {
+    if (endpointName != nil && CFStringGetLength(endpointName) > 0) {
+        if (deviceName != nil && CFStringGetLength(deviceName) > 0) {
             bool endpointNameBeginsWithDeviceName = 
+                CFStringGetLength(endpointName) >= CFStringGetLength(deviceName) &&
                 CFStringCompareWithOptions (
                     endpointName, deviceName,
-                    CFRangeMake(0, CFStringGetLength (endpointName)),
+                    CFRangeMake(0, CFStringGetLength (deviceName)),
                     kCFCompareCaseInsensitive
                 ) == kCFCompareEqualTo;
                 
