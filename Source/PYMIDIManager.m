@@ -56,20 +56,26 @@ static void midiNotifyProc (const MIDINotification* message, void* refCon);
 
 - (PYMIDIManager*)init
 {
-    notificationsEnabled = NO;
-    
-    MIDIClientCreate (CFSTR("PYMIDIManager"), midiNotifyProc, (void*)self, &midiClientRef);
-
-    realSourceArray = [[NSMutableArray alloc] init];
-    realDestinationArray = [[NSMutableArray alloc] init];
-    
-    [self updateRealSources];
-    [self updateRealDestinations];
-
-    [self buildNoteNamesArray];
+    if ((self = [super init])) {
+        notificationsEnabled = NO;
         
-    notificationsEnabled = YES;
-            
+        OSStatus err = MIDIClientCreate (CFSTR("PYMIDIManager"), midiNotifyProc, (void*)self, &midiClientRef);
+        if (err != noErr) {
+            NSLog(@"Error creating MIDI client: %d", (int)err);
+            [self release];
+            return nil;
+        }
+
+        realSourceArray = [[NSMutableArray alloc] init];
+        realDestinationArray = [[NSMutableArray alloc] init];
+        
+        [self updateRealSources];
+        [self updateRealDestinations];
+
+        [self buildNoteNamesArray];
+        
+        notificationsEnabled = YES;
+    }
     return self;
 }
 
@@ -159,8 +165,8 @@ midiNotifyProc (const MIDINotification* message, void* refCon)
         [endpoint syncWithMIDIEndpoint];
     
     // Find any non-virtual endpoints that we don't already know about
-    int i;
-    int count = MIDIGetNumberOfSources();
+    ItemCount i;
+    ItemCount count = MIDIGetNumberOfSources();
     for (i = 0; i < count; i++) {
         MIDIEndpointRef midiEndpointRef = MIDIGetSource (i);
         
@@ -170,6 +176,7 @@ midiNotifyProc (const MIDINotification* message, void* refCon)
         {
             endpoint = [[PYMIDIRealSource alloc] initWithMIDIEndpointRef:midiEndpointRef];
             [realSourceArray addObject:endpoint];
+            [endpoint release];
         }
     }
     
@@ -236,8 +243,8 @@ midiNotifyProc (const MIDINotification* message, void* refCon)
         [endpoint syncWithMIDIEndpoint];
     
     // Find any non-virtual endpoints that we don't already know about
-    int i;
-    int count = MIDIGetNumberOfDestinations();
+    ItemCount i;
+    ItemCount count = MIDIGetNumberOfDestinations();
     for (i = 0; i < count; i++) {
         MIDIEndpointRef midiEndpointRef = MIDIGetDestination (i);
         
@@ -247,6 +254,7 @@ midiNotifyProc (const MIDINotification* message, void* refCon)
         {
             endpoint = [[PYMIDIRealDestination alloc] initWithMIDIEndpointRef:midiEndpointRef];
             [realDestinationArray addObject:endpoint];
+            [endpoint release];
         }
     }
     
